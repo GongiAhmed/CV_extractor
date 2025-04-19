@@ -1,6 +1,6 @@
 # CV Information Extractor
 
-This web application extracts structured information from CVs/resumes using OCR and multiple language models. It processes PDF and PNG files, extracts text using Tesseract OCR, and then uses three different LLMs (LLaMA 3, Mistral, and Phi-2) via Ollama to extract structured information.
+This web application extracts structured information from CVs/resumes using OCR and multiple language models. It processes PDF and PNG files, extracts text using Tesseract OCR, and then uses three different LLMs (LLaMA 3, Mistral, and Qwen2) via Ollama to extract structured information.
 
 ## Features
 
@@ -42,7 +42,7 @@ pip install -r requirements.txt
      ```bash
      ollama pull llama3
      ollama pull mistral
-     ollama pull phi-2
+     ollama pull Qwen2
      ```
 
 ## Configuration
