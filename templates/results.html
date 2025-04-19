@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Extraction Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .result-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .model-column {
+            border-right: 1px solid #dee2e6;
+        }
+        .model-column:last-child {
+            border-right: none;
+        }
+        .model-header {
+            text-align: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #007bff;
+        }
+        .raw-text {
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #6c757d;
+        }
+        .field-name {
+            font-weight: bold;
+            color: #495057;
+        }
+        .field-value {
+            margin-bottom: 0.5rem;
+        }
+        .field-list {
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .back-button {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CV Extraction Results</h1>
+            <p class="lead">Comparing extraction results from different models</p>
+        </div>
+        
+        <div class="back-button">
+            <a href="/" class="btn btn-outline-secondary">← Back to Upload</a>
+        </div>
+        
+        <div class="result-container">
+            <h4>File: {{ filename }}</h4>
+            
+            <div class="row mt-4">
+                {% for model in models %}
+                <div class="col-md-4 model-column">
+                    <div class="model-header">
+                        <h5>{{ model|upper }}</h5>
+                    </div>
+                    
+                    <div class="model-results">
+                        {% set model_result = results[model] %}
+                        {% if model_result.error is defined %}
+                            <div class="alert alert-danger">{{ model_result.error }}</div>
+                        {% else %}
+                            <div class="field-name">Name:</div>
+                            <div class="field-value">{{ model_result.Name|default('Not found', true) }}</div>
+                            
+                            <div class="field-name">Email:</div>
+                            <div class="field-value">{{ model_result.Email|default('Not found', true) }}</div>
+                            
+                            <div class="field-name">Phone:</div>
+                            <div class="field-value">{{ model_result.Phone|default('Not found', true) }}</div>
+                            
+                            <div class="field-name">Education:</div>
+                            {% if model_result.Education is defined and model_result.Education is iterable and model_result.Education is not string %}
+                                <ul class="field-list">
+                                {% for edu in model_result.Education %}
+                                    <li>{{ edu }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="field-value">{{ model_result.Education|default('Not found', true) }}</div>
+                            {% endif %}
+                            
+                            <div class="field-name">Skills:</div>
+                            {% if model_result.Skills is defined and model_result.Skills is iterable and model_result.Skills is not string %}
+                                <ul class="field-list">
+                                {% for skill in model_result.Skills %}
+                                    <li>{{ skill }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="field-value">{{ model_result.Skills|default('Not found', true) }}</div>
+                            {% endif %}
+                            
+                            <div class="field-name">Experience:</div>
+                            {% if model_result.Experience is defined and model_result.Experience is iterable and model_result.Experience is not string %}
+                                <ul class="field-list">
+                                {% for exp in model_result.Experience %}
+                                    <li>{{ exp }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="field-value">{{ model_result.Experience|default('Not found', true) }}</div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="result-container">
+            <h4>Extracted Raw Text</h4>
+            <div class="raw-text mt-3">{{ extracted_text }}</div>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by Flask, Tesseract OCR, and Ollama</p>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
